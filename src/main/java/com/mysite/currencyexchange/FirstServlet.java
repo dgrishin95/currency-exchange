@@ -1,33 +1,31 @@
 package com.mysite.currencyexchange;
 
 import com.google.gson.Gson;
-import com.mysite.currencyexchange.test.ConnectDB;
+import com.mysite.currencyexchange.dao.CurrencyDao;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/first")
 public class FirstServlet extends HttpServlet {
 
-    static
-    {
-        ConnectDB connectDB = new ConnectDB();
+    private CurrencyDao currencyDao;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        currencyDao = new CurrencyDao();
+        super.init(config);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        var currencies = currencyDao.selectAllCurrencies();
 
-        var persons = List.of(
-                new Person(1, "Anna"),
-                new Person(2, "Max"),
-                new Person(1, "Lisa")
-        );
-
-        String json = new Gson().toJson(persons);
+        String json = new Gson().toJson(currencies);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(json);
