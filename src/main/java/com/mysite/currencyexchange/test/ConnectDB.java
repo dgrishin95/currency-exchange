@@ -7,7 +7,7 @@ public class ConnectDB {
 
     public ConnectDB() {
         // connection string
-        var url = "jdbc:sqlite::resource:db/test.db";
+        var url = "jdbc:sqlite::resource:db/mydb.db";
 
         try {
             Class.forName("org.sqlite.JDBC");
