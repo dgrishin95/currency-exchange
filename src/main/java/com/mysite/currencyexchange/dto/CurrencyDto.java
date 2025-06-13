@@ -1,27 +1,17 @@
-package com.mysite.currencyexchange.model;
+package com.mysite.currencyexchange.dto;
 
-public class Currency {
-    private int id;
+public class CurrencyDto {
     private String code;
     private String fullName;
     private String sign;
 
-    public Currency(int id, String code, String fullName, String sign) {
-        this.id = id;
+    public CurrencyDto(String code, String fullName, String sign) {
         this.code = code;
         this.fullName = fullName;
         this.sign = sign;
     }
 
-    public Currency() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public CurrencyDto() {
     }
 
     public String getCode() {
