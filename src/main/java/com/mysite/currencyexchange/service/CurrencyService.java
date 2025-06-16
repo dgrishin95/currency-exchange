@@ -3,6 +3,7 @@ package com.mysite.currencyexchange.service;
 import com.mysite.currencyexchange.dao.CurrencyDao;
 import com.mysite.currencyexchange.dto.CurrencyDto;
 import com.mysite.currencyexchange.mapper.CurrencyMapper;
+import java.sql.SQLException;
 import java.util.List;
 
 public class CurrencyService {
@@ -15,11 +16,11 @@ public class CurrencyService {
         this.currencyMapper = currencyMapper;
     }
 
-    public List<CurrencyDto> selectAllCurrencies() {
+    public List<CurrencyDto> selectAllCurrencies() throws SQLException {
         return currencyDao
                 .selectAllCurrencies()
                 .stream()
-                .map(CurrencyMapper.INSTANCE::toDto)
+                .map(currencyMapper::toDto)
                 .toList();
     }
 }

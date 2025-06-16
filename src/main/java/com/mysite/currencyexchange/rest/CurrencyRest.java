@@ -1,7 +1,8 @@
-package com.mysite.currencyexchange;
+package com.mysite.currencyexchange.rest;
 
 import com.google.gson.Gson;
 import com.mysite.currencyexchange.dao.CurrencyDao;
+import com.mysite.currencyexchange.dto.CurrencyDto;
 import com.mysite.currencyexchange.mapper.CurrencyMapper;
 import com.mysite.currencyexchange.service.CurrencyService;
 import jakarta.servlet.ServletConfig;
@@ -11,13 +12,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
-@WebServlet("/first")
-public class FirstServlet extends HttpServlet {
+@WebServlet("/currencies")
+public class CurrencyRest extends HttpServlet {
 
     private CurrencyService currencyService;
     private CurrencyDao currencyDao;
     private CurrencyMapper currencyMapper;
+
+    private final Gson gson = new Gson();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -28,14 +34,20 @@ public class FirstServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        var currencies = currencyService.selectAllCurrencies();
-
-        String json = new Gson().toJson(currencies);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        List<CurrencyDto> currencies;
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().write(json);
 
-//        super.doGet(req, resp);
+        try {
+            currencies = currencyService.selectAllCurrencies();
+            String json = gson.toJson(currencies);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(json);
+        } catch (SQLException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            Map<String, String> error = Map.of("error", "Database error");
+            resp.getWriter().write(gson.toJson(error));
+        }
     }
 }
