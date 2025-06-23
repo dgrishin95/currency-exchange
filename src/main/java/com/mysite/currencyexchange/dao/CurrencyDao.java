@@ -14,6 +14,7 @@ public class CurrencyDao {
     private String driverName = "org.sqlite.JDBC";
 
     private static final String SELECT_FROM_CURRENCIES = "select * from currencies";
+    private static final String SELECT_BY_CODE = "select * from currencies where code = ?";
 
     protected Connection getConnection() {
         try {
@@ -42,5 +43,33 @@ public class CurrencyDao {
         }
 
         return currencies;
+    }
+
+    public Currency selectCurrencyByCode(String code) throws SQLException {
+        Currency currency = new Currency();
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_CODE)) {
+            preparedStatement.setString(1, code);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                code = rs.getString("code");
+                String fullName = rs.getString("fullname");
+                String sign = rs.getString("sign");
+
+                currency.setId(id);
+                currency.setCode(code);
+                currency.setFullName(fullName);
+                currency.setSign(sign);
+            }
+        }
+
+        if (currency.getId() == 0) {
+            throw new SQLException();
+        }
+
+        return currency;
     }
 }

@@ -23,4 +23,8 @@ public class CurrencyService {
                 .map(currencyMapper::toDto)
                 .toList();
     }
+
+    public CurrencyDto selectCurrencyByCode(String code) throws SQLException {
+        return currencyMapper.toDto(currencyDao.selectCurrencyByCode(code));
+    }
 }

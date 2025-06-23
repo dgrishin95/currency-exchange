@@ -13,11 +13,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 
-@WebServlet("/currencies")
-public class CurrencyRest extends HttpServlet {
+@WebServlet("/currencies/*")
+public class CurrencyItemServlet extends HttpServlet {
 
     private CurrencyService currencyService;
     private CurrencyDao currencyDao;
@@ -35,13 +34,19 @@ public class CurrencyRest extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        List<CurrencyDto> currencies;
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
+        String pathInfo = req.getPathInfo();
+
         try {
-            currencies = currencyService.selectAllCurrencies();
-            String json = gson.toJson(currencies);
+            String json = "";
+            if (pathInfo != null && pathInfo.length() > 1) {
+                String code = pathInfo.substring(1); // "EUR"
+                CurrencyDto currencyDto = currencyService.selectCurrencyByCode(code);
+                json = gson.toJson(currencyDto);
+            }
+
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().write(json);
         } catch (SQLException e) {
