@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Map;
 
 @WebServlet("/currencies/*")
@@ -40,19 +39,41 @@ public class CurrencyItemServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         try {
-            String json = "";
-            if (pathInfo != null && pathInfo.length() > 1) {
+            if (pathInfo.length() == 1) {
+                // 400
+                codeIsMissingProcessing(resp);
+            } else if (pathInfo.length() > 1) {
                 String code = pathInfo.substring(1); // "EUR"
                 CurrencyDto currencyDto = currencyService.selectCurrencyByCode(code);
-                json = gson.toJson(currencyDto);
-            }
 
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(json);
-        } catch (SQLException e) {
+                if (currencyDto.getCode() == null) {
+                    codeIsNotFoundProcessing(resp);
+                } else {
+                    codeIsFoundProcessing(currencyDto, resp);
+                }
+            }
+        } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             Map<String, String> error = Map.of("error", "Database error");
             resp.getWriter().write(gson.toJson(error));
         }
+    }
+
+    private void codeIsMissingProcessing(HttpServletResponse resp) throws IOException {
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        Map<String, String> error = Map.of("error", "Currency code is required");
+        resp.getWriter().write(gson.toJson(error));
+    }
+
+    private void codeIsNotFoundProcessing(HttpServletResponse resp) throws IOException {
+        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        Map<String, String> error = Map.of("error", "Currency code is not found");
+        resp.getWriter().write(gson.toJson(error));
+    }
+
+    private void codeIsFoundProcessing(CurrencyDto currencyDto, HttpServletResponse resp) throws IOException {
+        String json = gson.toJson(currencyDto);
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(json);
     }
 }

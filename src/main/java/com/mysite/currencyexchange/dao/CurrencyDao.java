@@ -66,10 +66,6 @@ public class CurrencyDao {
             }
         }
 
-        if (currency.getId() == 0) {
-            throw new SQLException();
-        }
-
         return currency;
     }
 }
