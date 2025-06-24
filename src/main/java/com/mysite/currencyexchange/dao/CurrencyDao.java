@@ -6,15 +6,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CurrencyDao {
-    private String url = "jdbc:sqlite::resource:db/mydb.db";
+    private String url = "jdbc:sqlite:C:\\Work\\my\\_course\\currency-exchange\\db\\mydb.db";
     private String driverName = "org.sqlite.JDBC";
 
     private static final String SELECT_FROM_CURRENCIES = "select * from currencies";
     private static final String SELECT_BY_CODE = "select * from currencies where code = ?";
+    private static final String INSERT_INTO_CURRENCIES =
+            "insert into currencies (code, fullname, sign) values (?, ?, ?)";
 
     protected Connection getConnection() {
         try {
@@ -62,5 +65,26 @@ public class CurrencyDao {
                 return null;
             }
         }
+    }
+
+    public int saveCurrency(Currency currency) throws SQLException {
+        int id = 0;
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_CURRENCIES,
+                     Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, currency.getFullName());
+            preparedStatement.setString(2, currency.getCode());
+            preparedStatement.setString(3, currency.getSign());
+
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        }
+
+        return id;
     }
 }

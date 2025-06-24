@@ -1,17 +1,17 @@
 package com.mysite.currencyexchange.dto;
 
-public class CurrencyDto {
+public class CurrencyResponseDto {
     private String code;
     private String fullName;
     private String sign;
 
-    public CurrencyDto(String code, String fullName, String sign) {
+    public CurrencyResponseDto(String code, String fullName, String sign) {
         this.code = code;
         this.fullName = fullName;
         this.sign = sign;
     }
 
-    public CurrencyDto() {
+    public CurrencyResponseDto() {
     }
 
     public String getCode() {

@@ -1,7 +1,8 @@
 package com.mysite.currencyexchange.service;
 
 import com.mysite.currencyexchange.dao.CurrencyDao;
-import com.mysite.currencyexchange.dto.CurrencyDto;
+import com.mysite.currencyexchange.dto.CurrencyRequestDto;
+import com.mysite.currencyexchange.dto.CurrencyResponseDto;
 import com.mysite.currencyexchange.mapper.CurrencyMapper;
 import com.mysite.currencyexchange.model.Currency;
 import java.sql.SQLException;
@@ -17,16 +18,20 @@ public class CurrencyService {
         this.currencyMapper = currencyMapper;
     }
 
-    public List<CurrencyDto> selectAllCurrencies() throws SQLException {
+    public List<CurrencyResponseDto> selectAllCurrencies() throws SQLException {
         return currencyDao
                 .selectAllCurrencies()
                 .stream()
-                .map(currencyMapper::toDto)
+                .map(currencyMapper::toCurrencyResponseDto)
                 .toList();
     }
 
-    public CurrencyDto selectCurrencyByCode(String code) throws SQLException {
+    public CurrencyResponseDto selectCurrencyByCode(String code) throws SQLException {
         Currency currency = currencyDao.selectCurrencyByCode(code);
-        return currency != null ? currencyMapper.toDto(currency) : null;
+        return currency != null ? currencyMapper.toCurrencyResponseDto(currency) : null;
+    }
+
+    public int saveCurrency(CurrencyRequestDto currencyRequestDto) throws SQLException {
+        return currencyDao.saveCurrency(currencyMapper.toEntity(currencyRequestDto));
     }
 }

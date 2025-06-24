@@ -2,7 +2,7 @@ package com.mysite.currencyexchange.rest;
 
 import com.google.gson.Gson;
 import com.mysite.currencyexchange.dao.CurrencyDao;
-import com.mysite.currencyexchange.dto.CurrencyDto;
+import com.mysite.currencyexchange.dto.CurrencyResponseDto;
 import com.mysite.currencyexchange.mapper.CurrencyMapper;
 import com.mysite.currencyexchange.service.CurrencyService;
 import jakarta.servlet.ServletConfig;
@@ -43,12 +43,12 @@ public class CurrencyItemServlet extends HttpServlet {
                 processMissingCode(resp);
             } else {
                 String code = pathInfo.substring(1); // "EUR"
-                CurrencyDto currencyDto = currencyService.selectCurrencyByCode(code);
+                CurrencyResponseDto currencyResponseDto = currencyService.selectCurrencyByCode(code);
 
-                if (currencyDto == null) {
+                if (currencyResponseDto == null) {
                     processCodeNotFound(resp);
                 } else {
-                    processFoundCode(currencyDto, resp);
+                    processFoundCode(currencyResponseDto, resp);
                 }
             }
         } catch (Exception e) {
@@ -70,8 +70,8 @@ public class CurrencyItemServlet extends HttpServlet {
         resp.getWriter().write(gson.toJson(error));
     }
 
-    private void processFoundCode(CurrencyDto currencyDto, HttpServletResponse resp) throws IOException {
-        String json = gson.toJson(currencyDto);
+    private void processFoundCode(CurrencyResponseDto currencyResponseDto, HttpServletResponse resp) throws IOException {
+        String json = gson.toJson(currencyResponseDto);
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.getWriter().write(json);
     }
