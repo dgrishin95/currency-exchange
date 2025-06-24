@@ -17,7 +17,7 @@ public class CurrencyDao {
     private static final String SELECT_FROM_CURRENCIES = "select * from currencies";
     private static final String SELECT_BY_CODE = "select * from currencies where code = ?";
     private static final String INSERT_INTO_CURRENCIES =
-            "insert into currencies (code, fullname, sign) values (?, ?, ?)";
+            "insert into currencies (fullname, code, sign) values (?, ?, ?)";
 
     protected Connection getConnection() {
         try {

@@ -62,7 +62,7 @@ public class CurrencyCollectionServlet extends HttpServlet {
             String code = req.getParameter("code");
             String sign = req.getParameter("sign");
 
-            CurrencyRequestDto currencyRequestDto = new CurrencyRequestDto(name, code, sign);
+            CurrencyRequestDto currencyRequestDto = new CurrencyRequestDto(code, name, sign);
 
             if (!processFormIsNotFull(name, code, sign, resp)) {
                 CurrencyResponseDto currencyResponseDto = currencyService.selectCurrencyByCode(code);
