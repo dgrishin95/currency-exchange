@@ -64,16 +64,52 @@ public class CurrencyCollectionServlet extends HttpServlet {
 
             CurrencyRequestDto currencyRequestDto = new CurrencyRequestDto(name, code, sign);
 
-            int id = currencyService.saveCurrency(currencyRequestDto);
-            currencyRequestDto.setId(id);
+            if (!processFormIsNotFull(name, code, sign, resp)) {
+                CurrencyResponseDto currencyResponseDto = currencyService.selectCurrencyByCode(code);
 
-            String json = gson.toJson(currencyRequestDto);
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(json);
-        } catch (SQLException e) {
+                if (currencyResponseDto != null) {
+                    processCodeIsAlreadyExist(resp);
+                } else {
+                    processSaveCurrency(currencyRequestDto, resp);
+                }
+            }
+
+        } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             Map<String, String> error = Map.of("error", "Database error");
             resp.getWriter().write(gson.toJson(error));
         }
+    }
+
+    private void processSaveCurrency(CurrencyRequestDto currencyRequestDto, HttpServletResponse resp)
+            throws SQLException, IOException {
+        int id = currencyService.saveCurrency(currencyRequestDto);
+        currencyRequestDto.setId(id);
+
+        String json = gson.toJson(currencyRequestDto);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
+        resp.getWriter().write(json);
+    }
+
+    private boolean processFormIsNotFull(String name, String code, String sign, HttpServletResponse resp)
+            throws IOException {
+        if (name == null || name.trim().isEmpty()
+                || code == null || code.trim().isEmpty()
+                || sign == null || sign.trim().isEmpty()
+        ) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            Map<String, String> error = Map.of("error", "The required form field is missing");
+            resp.getWriter().write(gson.toJson(error));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void processCodeIsAlreadyExist(HttpServletResponse resp) throws IOException {
+        resp.setStatus(HttpServletResponse.SC_CONFLICT);
+        Map<String, String> error = Map.of("error", "The currency with this code already exists");
+        resp.getWriter().write(gson.toJson(error));
     }
 }
