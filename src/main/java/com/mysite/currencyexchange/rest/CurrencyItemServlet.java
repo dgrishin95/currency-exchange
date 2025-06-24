@@ -20,14 +20,14 @@ public class CurrencyItemServlet extends HttpServlet {
     private CurrencyService currencyService;
     private CurrencyDao currencyDao;
     private CurrencyMapper currencyMapper;
-
-    private final Gson gson = new Gson();
+    private Gson gson;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         currencyDao = new CurrencyDao();
         currencyMapper = CurrencyMapper.INSTANCE;
         currencyService = new CurrencyService(currencyDao, currencyMapper);
+        gson = new Gson();
         super.init(config);
     }
 
@@ -39,17 +39,16 @@ public class CurrencyItemServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         try {
-            if (pathInfo.length() == 1) {
-                // 400
-                codeIsMissingProcessing(resp);
-            } else if (pathInfo.length() > 1) {
+            if (pathInfo == null || pathInfo.equals("/") || pathInfo.trim().isEmpty()) {
+                processMissingCode(resp);
+            } else {
                 String code = pathInfo.substring(1); // "EUR"
                 CurrencyDto currencyDto = currencyService.selectCurrencyByCode(code);
 
-                if (currencyDto.getCode() == null) {
-                    codeIsNotFoundProcessing(resp);
+                if (currencyDto == null) {
+                    processCodeNotFound(resp);
                 } else {
-                    codeIsFoundProcessing(currencyDto, resp);
+                    processFoundCode(currencyDto, resp);
                 }
             }
         } catch (Exception e) {
@@ -59,19 +58,19 @@ public class CurrencyItemServlet extends HttpServlet {
         }
     }
 
-    private void codeIsMissingProcessing(HttpServletResponse resp) throws IOException {
+    private void processMissingCode(HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         Map<String, String> error = Map.of("error", "Currency code is required");
         resp.getWriter().write(gson.toJson(error));
     }
 
-    private void codeIsNotFoundProcessing(HttpServletResponse resp) throws IOException {
+    private void processCodeNotFound(HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         Map<String, String> error = Map.of("error", "Currency code is not found");
         resp.getWriter().write(gson.toJson(error));
     }
 
-    private void codeIsFoundProcessing(CurrencyDto currencyDto, HttpServletResponse resp) throws IOException {
+    private void processFoundCode(CurrencyDto currencyDto, HttpServletResponse resp) throws IOException {
         String json = gson.toJson(currencyDto);
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.getWriter().write(json);

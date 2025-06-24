@@ -3,6 +3,7 @@ package com.mysite.currencyexchange.service;
 import com.mysite.currencyexchange.dao.CurrencyDao;
 import com.mysite.currencyexchange.dto.CurrencyDto;
 import com.mysite.currencyexchange.mapper.CurrencyMapper;
+import com.mysite.currencyexchange.model.Currency;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class CurrencyService {
     }
 
     public CurrencyDto selectCurrencyByCode(String code) throws SQLException {
-        return currencyMapper.toDto(currencyDao.selectCurrencyByCode(code));
+        Currency currency = currencyDao.selectCurrencyByCode(code);
+        return currency != null ? currencyMapper.toDto(currency) : null;
     }
 }

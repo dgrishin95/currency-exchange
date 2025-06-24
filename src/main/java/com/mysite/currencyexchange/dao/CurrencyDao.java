@@ -46,26 +46,21 @@ public class CurrencyDao {
     }
 
     public Currency selectCurrencyByCode(String code) throws SQLException {
-        Currency currency = new Currency();
-
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_CODE)) {
             preparedStatement.setString(1, code);
             ResultSet rs = preparedStatement.executeQuery();
 
-            while (rs.next()) {
+            if (rs.next()) {
                 int id = rs.getInt("id");
-                code = rs.getString("code");
+                String foundCode = rs.getString("code");
                 String fullName = rs.getString("fullname");
                 String sign = rs.getString("sign");
 
-                currency.setId(id);
-                currency.setCode(code);
-                currency.setFullName(fullName);
-                currency.setSign(sign);
+                return new Currency(id, foundCode, fullName, sign);
+            } else {
+                return null;
             }
         }
-
-        return currency;
     }
 }
