@@ -31,7 +31,17 @@ public class CurrencyService {
         return currency != null ? currencyMapper.toCurrencyResponseDto(currency) : null;
     }
 
-    public int saveCurrency(CurrencyRequestDto currencyRequestDto) throws SQLException {
-        return currencyDao.saveCurrency(currencyMapper.toEntity(currencyRequestDto));
+    public CurrencyResponseDto saveCurrency(CurrencyRequestDto currencyRequestDto) throws SQLException {
+        currencyRequestDto.setCode(currencyRequestDto.getCode().toUpperCase());
+
+        Currency currency = currencyMapper.toEntity(currencyRequestDto);
+        int generatedId = currencyDao.saveCurrency(currency);
+
+        currency.setId(generatedId);
+        return currencyMapper.toCurrencyResponseDto(currency);
+    }
+
+    public boolean currencyExistsByCode(String code) throws SQLException {
+        return selectCurrencyByCode(code) != null;
     }
 }
