@@ -48,7 +48,7 @@ public class CurrencyCollectionServlet extends BaseServlet {
     }
 
     private boolean isValidCurrencyRequest(CurrencyRequestDto dto) {
-        return isNotBlank(dto.getFullName()) &&
+        return isNotBlank(dto.getName()) &&
                 isNotBlank(dto.getCode()) &&
                 isNotBlank(dto.getSign());
     }

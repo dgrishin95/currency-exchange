@@ -17,7 +17,7 @@ public class CurrencyDao {
     private static final String SELECT_FROM_CURRENCIES = "select * from currencies";
     private static final String SELECT_BY_CODE = "select * from currencies where code = ?";
     private static final String INSERT_INTO_CURRENCIES =
-            "insert into currencies (fullname, code, sign) values (?, ?, ?)";
+            "insert into currencies (name, code, sign) values (?, ?, ?)";
 
     protected Connection getConnection() {
         try {
@@ -38,9 +38,9 @@ public class CurrencyDao {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String code = rs.getString("code");
-                String fullName = rs.getString("fullname");
+                String name = rs.getString("name");
                 String sign = rs.getString("sign");
-                currencies.add(new Currency(id, code, fullName, sign));
+                currencies.add(new Currency(id, code, name, sign));
             }
 
         }
@@ -57,10 +57,10 @@ public class CurrencyDao {
             if (rs.next()) {
                 int id = rs.getInt("id");
                 String foundCode = rs.getString("code");
-                String fullName = rs.getString("fullname");
+                String name = rs.getString("name");
                 String sign = rs.getString("sign");
 
-                return new Currency(id, foundCode, fullName, sign);
+                return new Currency(id, foundCode, name, sign);
             } else {
                 return null;
             }
@@ -73,7 +73,7 @@ public class CurrencyDao {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_CURRENCIES,
                      Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, currency.getFullName());
+            preparedStatement.setString(1, currency.getName());
             preparedStatement.setString(2, currency.getCode());
             preparedStatement.setString(3, currency.getSign());
 

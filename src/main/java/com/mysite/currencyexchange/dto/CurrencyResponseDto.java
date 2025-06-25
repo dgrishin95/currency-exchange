@@ -1,14 +1,23 @@
 package com.mysite.currencyexchange.dto;
 
 public class CurrencyResponseDto {
+    private int id;
     private String code;
-    private String fullName;
+    private String name;
     private String sign;
 
-    public CurrencyResponseDto(String code, String fullName, String sign) {
+    public CurrencyResponseDto(String code, String name, String sign) {
         this.code = code;
-        this.fullName = fullName;
+        this.name = name;
         this.sign = sign;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public CurrencyResponseDto() {
@@ -22,12 +31,12 @@ public class CurrencyResponseDto {
         this.code = code;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSign() {
