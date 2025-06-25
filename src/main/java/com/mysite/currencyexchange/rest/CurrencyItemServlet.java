@@ -1,13 +1,14 @@
 package com.mysite.currencyexchange.rest;
 
 import com.mysite.currencyexchange.dto.CurrencyResponseDto;
+import com.mysite.currencyexchange.rest.base.BaseCurrencyServlet;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/currency/*")
-public class CurrencyItemServlet extends BaseServlet {
+public class CurrencyItemServlet extends BaseCurrencyServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

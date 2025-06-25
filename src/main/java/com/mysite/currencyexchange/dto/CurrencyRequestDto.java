@@ -1,7 +1,6 @@
 package com.mysite.currencyexchange.dto;
 
 public class CurrencyRequestDto {
-    private int id;
     private String code;
     private String name;
     private String sign;
@@ -13,14 +12,6 @@ public class CurrencyRequestDto {
     }
 
     public CurrencyRequestDto() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getCode() {

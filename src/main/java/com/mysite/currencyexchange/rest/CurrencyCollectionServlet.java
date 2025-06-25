@@ -2,6 +2,7 @@ package com.mysite.currencyexchange.rest;
 
 import com.mysite.currencyexchange.dto.CurrencyRequestDto;
 import com.mysite.currencyexchange.dto.CurrencyResponseDto;
+import com.mysite.currencyexchange.rest.base.BaseCurrencyServlet;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/currencies")
-public class CurrencyCollectionServlet extends BaseServlet {
+public class CurrencyCollectionServlet extends BaseCurrencyServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
