@@ -1,8 +1,8 @@
 package com.mysite.currencyexchange.dao;
 
+import com.mysite.currencyexchange.dao.base.BaseDao;
 import com.mysite.currencyexchange.model.Currency;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,23 +10,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CurrencyDao {
-    private String url = "jdbc:sqlite:C:\\Work\\my\\_course\\currency-exchange\\db\\mydb.db";
-    private String driverName = "org.sqlite.JDBC";
+public class CurrencyDao extends BaseDao {
 
     private static final String SELECT_FROM_CURRENCIES = "select * from currencies";
     private static final String SELECT_BY_CODE = "select * from currencies where code = ?";
     private static final String INSERT_INTO_CURRENCIES =
             "insert into currencies (name, code, sign) values (?, ?, ?)";
-
-    protected Connection getConnection() {
-        try {
-            Class.forName(driverName);
-            return DriverManager.getConnection(url);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new IllegalStateException("Database connection failed", e);
-        }
-    }
 
     public List<Currency> selectAllCurrencies() throws SQLException {
         List<Currency> currencies = new ArrayList<>();

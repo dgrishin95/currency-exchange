@@ -10,7 +10,6 @@ import jakarta.servlet.ServletException;
 public class BaseCurrencyServlet extends BaseServlet {
     protected CurrencyService currencyService;
 
-    protected static final String MISSING_FIELD_ERROR = "The required form field is missing";
     protected static final String CURRENCY_EXISTS_ERROR = "The currency with this code already exists";
     protected static final String CURRENCY_NOT_FOUND_ERROR = "Currency code is not found";
     protected static final String CURRENCY_CODE_REQUIRED_ERROR = "Currency code is required";

@@ -10,10 +10,12 @@ public class ExchangeRateService {
 
     private final ExchangeRateDao exchangeRateDao;
     private final ExchangeRateMapper exchangeRateMapper;
+    private final CurrencyService currencyService;
 
-    public ExchangeRateService(ExchangeRateDao exchangeRateDao, ExchangeRateMapper exchangeRateMapper) {
+    public ExchangeRateService(ExchangeRateDao exchangeRateDao, ExchangeRateMapper exchangeRateMapper, CurrencyService currencyService) {
         this.exchangeRateDao = exchangeRateDao;
         this.exchangeRateMapper = exchangeRateMapper;
+        this.currencyService = currencyService;
     }
 
     public List<ExchangeRateResponseDto> selectAllExchangeRates() throws SQLException {

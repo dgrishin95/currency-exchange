@@ -1,18 +1,18 @@
 package com.mysite.currencyexchange.dao;
 
+import com.mysite.currencyexchange.dao.base.BaseDao;
 import com.mysite.currencyexchange.dto.RawExchangeRateDto;
+import com.mysite.currencyexchange.model.ExchangeRate;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExchangeRateDao {
-    private String url = "jdbc:sqlite:C:\\Work\\my\\_course\\currency-exchange\\db\\mydb.db";
-    private String driverName = "org.sqlite.JDBC";
+public class ExchangeRateDao extends BaseDao {
 
     private static final String SELECT_FROM_EXCHANGE_RATES = "select er.id, \n" +
             "       bc.id as base_id, bc.code as base_code, bc.name as base_name, bc.sign as base_sign,\n" +
@@ -22,14 +22,8 @@ public class ExchangeRateDao {
             "join currencies bc on er.basecurrencyid = bc.id\n" +
             "join currencies tc on er.targetcurrencyid = tc.id;";
 
-    protected Connection getConnection() {
-        try {
-            Class.forName(driverName);
-            return DriverManager.getConnection(url);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new IllegalStateException("Database connection failed", e);
-        }
-    }
+    private static final String INSERT_INTO_EXCHANGE_RATES =
+            "insert into currencies (basecurrencyid, targetcurrencyid, rate) values (?, ?, ?)";
 
     public List<RawExchangeRateDto> selectAllExchangeRates() throws SQLException {
         List<RawExchangeRateDto> rawExchangeRateDtos = new ArrayList<>();
@@ -60,5 +54,26 @@ public class ExchangeRateDao {
         }
 
         return rawExchangeRateDtos;
+    }
+
+    public int saveExchangeRate(ExchangeRate exchangeRate) throws SQLException {
+        int id = 0;
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_EXCHANGE_RATES,
+                     Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setInt(1, exchangeRate.getBaseCurrencyId());
+            preparedStatement.setInt(2, exchangeRate.getTargetCurrencyId());
+            preparedStatement.setBigDecimal(3, exchangeRate.getRate());
+
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        }
+
+        return id;
     }
 }

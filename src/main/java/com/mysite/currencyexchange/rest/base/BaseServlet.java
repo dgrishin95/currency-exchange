@@ -9,6 +9,7 @@ import java.util.Map;
 public class BaseServlet extends HttpServlet {
     protected Gson gson;
 
+    protected static final String MISSING_FIELD_ERROR = "The required form field is missing";
     protected static final String DATABASE_ERROR = "Database error";
 
     protected void sendJsonResponse(HttpServletResponse response, Object data, int statusCode)
@@ -23,5 +24,9 @@ public class BaseServlet extends HttpServlet {
             throws IOException {
         Map<String, String> error = Map.of("error", errorMessage);
         sendJsonResponse(response, error, statusCode);
+    }
+
+    protected boolean isNotBlank(String str) {
+        return str != null && !str.trim().isEmpty();
     }
 }

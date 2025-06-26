@@ -53,8 +53,4 @@ public class CurrencyCollectionServlet extends BaseCurrencyServlet {
                 isNotBlank(dto.getCode()) &&
                 isNotBlank(dto.getSign());
     }
-
-    private boolean isNotBlank(String str) {
-        return str != null && !str.trim().isEmpty();
-    }
 }
