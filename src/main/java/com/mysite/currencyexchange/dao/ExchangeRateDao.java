@@ -23,7 +23,7 @@ public class ExchangeRateDao extends BaseDao {
             "join currencies tc on er.targetcurrencyid = tc.id;";
 
     private static final String INSERT_INTO_EXCHANGE_RATES =
-            "insert into currencies (basecurrencyid, targetcurrencyid, rate) values (?, ?, ?)";
+            "insert into exchange_rates (basecurrencyid, targetcurrencyid, rate) values (?, ?, ?)";
 
     public List<RawExchangeRateDto> selectAllExchangeRates() throws SQLException {
         List<RawExchangeRateDto> rawExchangeRateDtos = new ArrayList<>();

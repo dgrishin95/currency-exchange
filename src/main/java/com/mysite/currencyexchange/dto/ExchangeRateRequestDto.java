@@ -3,33 +3,33 @@ package com.mysite.currencyexchange.dto;
 import java.math.BigDecimal;
 
 public class ExchangeRateRequestDto {
-    private int baseCurrencyId;
-    private int targetCurrencyId;
+    private String baseCurrencyCode;
+    private String targetCurrencyCode;
     private BigDecimal rate;
 
-    public ExchangeRateRequestDto(int baseCurrencyId, int targetCurrencyId, BigDecimal rate) {
-        this.baseCurrencyId = baseCurrencyId;
-        this.targetCurrencyId = targetCurrencyId;
+    public ExchangeRateRequestDto(String baseCurrencyCode, String targetCurrencyCode, BigDecimal rate) {
+        this.baseCurrencyCode = baseCurrencyCode;
+        this.targetCurrencyCode = targetCurrencyCode;
         this.rate = rate;
     }
 
     public ExchangeRateRequestDto() {
     }
 
-    public int getBaseCurrencyId() {
-        return baseCurrencyId;
+    public String getBaseCurrencyCode() {
+        return baseCurrencyCode;
     }
 
-    public void setBaseCurrencyId(int baseCurrencyId) {
-        this.baseCurrencyId = baseCurrencyId;
+    public void setBaseCurrencyCode(String baseCurrencyCode) {
+        this.baseCurrencyCode = baseCurrencyCode;
     }
 
-    public int getTargetCurrencyId() {
-        return targetCurrencyId;
+    public String getTargetCurrencyCode() {
+        return targetCurrencyCode;
     }
 
-    public void setTargetCurrencyId(int targetCurrencyId) {
-        this.targetCurrencyId = targetCurrencyId;
+    public void setTargetCurrencyCode(String targetCurrencyCode) {
+        this.targetCurrencyCode = targetCurrencyCode;
     }
 
     public BigDecimal getRate() {

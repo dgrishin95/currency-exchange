@@ -13,6 +13,9 @@ import jakarta.servlet.ServletException;
 public class BaseExchangeRateServlet extends BaseServlet {
     protected ExchangeRateService exchangeRateService;
 
+    protected static final String CURRENCY_PAIR_ERROR =
+            "One (or both) currencies from a currency pair do not exist in the database";
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
