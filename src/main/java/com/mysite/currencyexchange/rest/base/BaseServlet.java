@@ -1,11 +1,6 @@
 package com.mysite.currencyexchange.rest.base;
 
 import com.google.gson.Gson;
-import com.mysite.currencyexchange.dao.CurrencyDao;
-import com.mysite.currencyexchange.mapper.CurrencyMapper;
-import com.mysite.currencyexchange.service.CurrencyService;
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
