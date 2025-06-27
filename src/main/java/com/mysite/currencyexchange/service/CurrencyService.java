@@ -27,7 +27,7 @@ public class CurrencyService {
     }
 
     public CurrencyResponseDto selectCurrencyByCode(String code) throws SQLException {
-        Currency currency = currencyDao.selectCurrencyByCode(code);
+        Currency currency = currencyDao.selectCurrencyByCode(code.toUpperCase());
         return currency != null ? currencyMapper.toCurrencyResponseDto(currency) : null;
     }
 
