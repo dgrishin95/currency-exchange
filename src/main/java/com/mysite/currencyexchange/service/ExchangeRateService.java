@@ -33,9 +33,9 @@ public class ExchangeRateService {
         return currencyService.selectCurrencyByCode(code);
     }
 
-    public ExchangeRateResponseDto saveCurrency(ExchangeRateRequestDto exchangeRateRequestDto,
-                                                CurrencyResponseDto baseCurrencyResponseDto,
-                                                CurrencyResponseDto targetCurrencyResponseDto) throws SQLException {
+    public ExchangeRateResponseDto saveExchangeRate(ExchangeRateRequestDto exchangeRateRequestDto,
+                                                    CurrencyResponseDto baseCurrencyResponseDto,
+                                                    CurrencyResponseDto targetCurrencyResponseDto) throws SQLException {
         ExchangeRate entity = new ExchangeRate(0, baseCurrencyResponseDto.getId(),
                 targetCurrencyResponseDto.getId(), exchangeRateRequestDto.getRate());
 
@@ -43,5 +43,16 @@ public class ExchangeRateService {
 
         return new ExchangeRateResponseDto(generatedId, baseCurrencyResponseDto,
                 targetCurrencyResponseDto, exchangeRateRequestDto.getRate());
+    }
+
+    public ExchangeRateResponseDto selectExchangeRateByCurrenciesCodes(CurrencyResponseDto baseCurrencyResponseDto,
+                                                     CurrencyResponseDto targetCurrencyResponseDto) throws SQLException {
+        ExchangeRate exchangeRate = exchangeRateDao.selectExchangeRateByCodesIds(
+                baseCurrencyResponseDto.getId(), targetCurrencyResponseDto.getId());
+
+        return exchangeRate != null ?
+                new ExchangeRateResponseDto(exchangeRate.getId(), baseCurrencyResponseDto,
+                        targetCurrencyResponseDto, exchangeRate.getRate())
+                : null;
     }
 }

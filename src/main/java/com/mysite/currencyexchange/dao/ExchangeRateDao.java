@@ -2,6 +2,7 @@ package com.mysite.currencyexchange.dao;
 
 import com.mysite.currencyexchange.dao.base.BaseDao;
 import com.mysite.currencyexchange.dto.RawExchangeRateDto;
+import com.mysite.currencyexchange.model.Currency;
 import com.mysite.currencyexchange.model.ExchangeRate;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -24,6 +25,9 @@ public class ExchangeRateDao extends BaseDao {
 
     private static final String INSERT_INTO_EXCHANGE_RATES =
             "insert into exchange_rates (basecurrencyid, targetcurrencyid, rate) values (?, ?, ?)";
+
+    private static final String SELECT_BY_CODES_IDS =
+            "select * from exchange_rates where basecurrencyid = ? and targetcurrencyid = ?";
 
     public List<RawExchangeRateDto> selectAllExchangeRates() throws SQLException {
         List<RawExchangeRateDto> rawExchangeRateDtos = new ArrayList<>();
@@ -75,5 +79,23 @@ public class ExchangeRateDao extends BaseDao {
         }
 
         return id;
+    }
+
+    public ExchangeRate selectExchangeRateByCodesIds(int baseCurrencyId, int targetCurrencyId) throws SQLException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_CODES_IDS)) {
+            preparedStatement.setInt(1, baseCurrencyId);
+            preparedStatement.setInt(2, targetCurrencyId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                BigDecimal rate = rs.getBigDecimal("rate");
+
+                return new ExchangeRate(id, baseCurrencyId, targetCurrencyId, rate);
+            } else {
+                return null;
+            }
+        }
     }
 }

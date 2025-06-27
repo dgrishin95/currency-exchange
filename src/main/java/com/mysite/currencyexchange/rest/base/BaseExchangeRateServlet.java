@@ -3,6 +3,7 @@ package com.mysite.currencyexchange.rest.base;
 import com.google.gson.Gson;
 import com.mysite.currencyexchange.dao.CurrencyDao;
 import com.mysite.currencyexchange.dao.ExchangeRateDao;
+import com.mysite.currencyexchange.dto.CurrencyResponseDto;
 import com.mysite.currencyexchange.mapper.CurrencyMapper;
 import com.mysite.currencyexchange.mapper.ExchangeRateMapper;
 import com.mysite.currencyexchange.service.CurrencyService;
@@ -15,6 +16,11 @@ public class BaseExchangeRateServlet extends BaseServlet {
 
     protected static final String CURRENCY_PAIR_ERROR =
             "One (or both) currencies from a currency pair do not exist in the database";
+    protected static final String RATE_NOT_FOUND_ERROR = "The exchange rate for the pair was not found";
+    protected static final String CURRENCY_CODES_MISSING_ERROR = "The currency codes of the pair are missing in the address";
+
+    protected static final int CURRENCY_CODE_LENGTH = 3;
+    protected static final int CURRENCY_CODES_LENGTH = 6;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -29,5 +35,10 @@ public class BaseExchangeRateServlet extends BaseServlet {
         gson = new Gson();
 
         super.init(config);
+    }
+
+    protected boolean isValidCurrencies(CurrencyResponseDto baseCurrencyResponseDto,
+                                      CurrencyResponseDto targetCurrencyResponseDto) {
+        return baseCurrencyResponseDto != null && targetCurrencyResponseDto != null;
     }
 }

@@ -55,7 +55,7 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
                     baseCurrencyCode, targetCurrencyCode, rateValue.get());
 
             // Успех - 201
-            ExchangeRateResponseDto exchangeRateResponseDto = exchangeRateService.saveCurrency(exchangeRateRequestDto,
+            ExchangeRateResponseDto exchangeRateResponseDto = exchangeRateService.saveExchangeRate(exchangeRateRequestDto,
                     baseCurrencyResponseDto, targetCurrencyResponseDto);
             sendJsonResponse(response, exchangeRateResponseDto, HttpServletResponse.SC_CREATED);
         } catch (Exception e) {
@@ -66,11 +66,6 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
     private boolean isValidParameters(String baseCurrencyCode, String targetCurrencyCode,
                                       Optional<BigDecimal> rateValue) {
         return isNotBlank(baseCurrencyCode) && isNotBlank(targetCurrencyCode) && rateValue.isPresent();
-    }
-
-    private boolean isValidCurrencies(CurrencyResponseDto baseCurrencyResponseDto,
-                                      CurrencyResponseDto targetCurrencyResponseDto) {
-        return baseCurrencyResponseDto != null && targetCurrencyResponseDto != null;
     }
 
     private Optional<BigDecimal> parseBigDecimal(String rate) {

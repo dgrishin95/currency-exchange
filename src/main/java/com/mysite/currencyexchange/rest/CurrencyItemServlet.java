@@ -32,13 +32,4 @@ public class CurrencyItemServlet extends BaseCurrencyServlet {
             sendErrorResponse(resp, DATABASE_ERROR, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
-
-    private String extractCurrencyCodeFromPath(String pathInfo) {
-        if (pathInfo == null || pathInfo.equals("/") || pathInfo.trim().isEmpty()) {
-            return null;
-        }
-
-        String code = pathInfo.substring(1);
-        return code.trim().isEmpty() ? null : code.toUpperCase();
-    }
 }
