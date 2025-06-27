@@ -34,15 +34,11 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
 
             Optional<BigDecimal> rateValue = parseBigDecimal(rate);
 
-            // Отсутствует нужное поле формы - 400
             if (!isValidParameters(baseCurrencyCode, targetCurrencyCode, rateValue)) {
                 sendErrorResponse(response, MISSING_FIELD_ERROR, HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
 
-            // TODO: Валютная пара с таким кодом уже существует - 409
-
-            // Одна (или обе) валюта из валютной пары не существует в БД - 404
             CurrencyResponseDto baseCurrencyResponseDto = exchangeRateService.selectCurrencyByCode(baseCurrencyCode);
             CurrencyResponseDto targetCurrencyResponseDto = exchangeRateService.selectCurrencyByCode(targetCurrencyCode);
 
@@ -51,11 +47,18 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
                 return;
             }
 
+            ExchangeRateResponseDto exchangeRateResponseDto = exchangeRateService.selectExchangeRateByCurrenciesCodes(
+                    baseCurrencyResponseDto, targetCurrencyResponseDto);
+
+            if (exchangeRateResponseDto != null) {
+                sendErrorResponse(response, CURRENCY_PAIR_EXISTS_ERROR, HttpServletResponse.SC_CONFLICT);
+                return;
+            }
+
             ExchangeRateRequestDto exchangeRateRequestDto = new ExchangeRateRequestDto(
                     baseCurrencyCode, targetCurrencyCode, rateValue.get());
 
-            // Успех - 201
-            ExchangeRateResponseDto exchangeRateResponseDto = exchangeRateService.saveExchangeRate(exchangeRateRequestDto,
+            exchangeRateResponseDto = exchangeRateService.saveExchangeRate(exchangeRateRequestDto,
                     baseCurrencyResponseDto, targetCurrencyResponseDto);
             sendJsonResponse(response, exchangeRateResponseDto, HttpServletResponse.SC_CREATED);
         } catch (Exception e) {

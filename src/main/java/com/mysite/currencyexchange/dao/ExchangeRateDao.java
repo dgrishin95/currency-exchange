@@ -71,10 +71,11 @@ public class ExchangeRateDao extends BaseDao {
             preparedStatement.setBigDecimal(3, exchangeRate.getRate());
 
             preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
 
-            if (rs.next()) {
-                id = rs.getInt(1);
+            try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
+                if (rs.next()) {
+                    id = rs.getInt(1);
+                }
             }
         }
 

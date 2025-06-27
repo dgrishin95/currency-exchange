@@ -35,7 +35,6 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
             ExchangeRateResponseDto exchangeRateResponseDto = exchangeRateService.selectExchangeRateByCurrenciesCodes(
                     baseCurrencyResponseDto, targetCurrencyResponseDto);
 
-
             if (exchangeRateResponseDto == null) {
                 sendErrorResponse(response, RATE_NOT_FOUND_ERROR, HttpServletResponse.SC_NOT_FOUND);
                 return;

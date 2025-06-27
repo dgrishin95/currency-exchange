@@ -18,6 +18,7 @@ public class BaseExchangeRateServlet extends BaseServlet {
             "One (or both) currencies from a currency pair do not exist in the database";
     protected static final String RATE_NOT_FOUND_ERROR = "The exchange rate for the pair was not found";
     protected static final String CURRENCY_CODES_MISSING_ERROR = "The currency codes of the pair are missing in the address";
+    protected static final String CURRENCY_PAIR_EXISTS_ERROR = "A currency pair with this code already exists";
 
     protected static final int CURRENCY_CODE_LENGTH = 3;
     protected static final int CURRENCY_CODES_LENGTH = 6;

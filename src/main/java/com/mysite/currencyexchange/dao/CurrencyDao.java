@@ -67,10 +67,11 @@ public class CurrencyDao extends BaseDao {
             preparedStatement.setString(3, currency.getSign());
 
             preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
 
-            if (rs.next()) {
-                id = rs.getInt(1);
+            try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
+                if (rs.next()) {
+                    id = rs.getInt(1);
+                }
             }
         }
 
