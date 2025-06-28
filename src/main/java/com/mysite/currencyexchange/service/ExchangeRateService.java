@@ -6,6 +6,7 @@ import com.mysite.currencyexchange.dto.ExchangeRateRequestDto;
 import com.mysite.currencyexchange.dto.ExchangeRateResponseDto;
 import com.mysite.currencyexchange.mapper.ExchangeRateMapper;
 import com.mysite.currencyexchange.model.ExchangeRate;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class ExchangeRateService {
     }
 
     public ExchangeRateResponseDto selectExchangeRateByCurrenciesCodes(CurrencyResponseDto baseCurrencyResponseDto,
-                                                     CurrencyResponseDto targetCurrencyResponseDto) throws SQLException {
+                                                                       CurrencyResponseDto targetCurrencyResponseDto) throws SQLException {
         ExchangeRate exchangeRate = exchangeRateDao.selectExchangeRateByCodesIds(
                 baseCurrencyResponseDto.getId(), targetCurrencyResponseDto.getId());
 
@@ -54,5 +55,11 @@ public class ExchangeRateService {
                 new ExchangeRateResponseDto(exchangeRate.getId(), baseCurrencyResponseDto,
                         targetCurrencyResponseDto, exchangeRate.getRate())
                 : null;
+    }
+
+    public boolean updateExchangeRate(BigDecimal rate, CurrencyResponseDto baseCurrencyResponseDto,
+                                      CurrencyResponseDto targetCurrencyResponseDto) throws SQLException {
+        return exchangeRateDao.updateExchangeRate(
+                rate, baseCurrencyResponseDto.getId(), targetCurrencyResponseDto.getId());
     }
 }

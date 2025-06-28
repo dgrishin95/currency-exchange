@@ -70,16 +70,4 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
                                       Optional<BigDecimal> rateValue) {
         return isNotBlank(baseCurrencyCode) && isNotBlank(targetCurrencyCode) && rateValue.isPresent();
     }
-
-    private Optional<BigDecimal> parseBigDecimal(String rate) {
-        if (isNotBlank(rate)) {
-            try {
-                return Optional.of(new BigDecimal(rate));
-            } catch (NumberFormatException e) {
-                return Optional.empty();
-            }
-        }
-
-        return Optional.empty();
-    }
 }

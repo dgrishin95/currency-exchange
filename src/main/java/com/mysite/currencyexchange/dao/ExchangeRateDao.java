@@ -2,7 +2,6 @@ package com.mysite.currencyexchange.dao;
 
 import com.mysite.currencyexchange.dao.base.BaseDao;
 import com.mysite.currencyexchange.dto.RawExchangeRateDto;
-import com.mysite.currencyexchange.model.Currency;
 import com.mysite.currencyexchange.model.ExchangeRate;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -15,7 +14,8 @@ import java.util.List;
 
 public class ExchangeRateDao extends BaseDao {
 
-    private static final String SELECT_FROM_EXCHANGE_RATES = "select er.id, \n" +
+    private static final String SELECT =
+            "select er.id, \n" +
             "       bc.id as base_id, bc.code as base_code, bc.name as base_name, bc.sign as base_sign,\n" +
             "       tc.id as target_id, tc.code as target_code, tc.name as target_name, tc.sign as target_sign,\n" +
             "       er.rate\n" +
@@ -23,17 +23,20 @@ public class ExchangeRateDao extends BaseDao {
             "join currencies bc on er.basecurrencyid = bc.id\n" +
             "join currencies tc on er.targetcurrencyid = tc.id;";
 
-    private static final String INSERT_INTO_EXCHANGE_RATES =
+    private static final String INSERT =
             "insert into exchange_rates (basecurrencyid, targetcurrencyid, rate) values (?, ?, ?)";
 
     private static final String SELECT_BY_CODES_IDS =
             "select * from exchange_rates where basecurrencyid = ? and targetcurrencyid = ?";
 
+    private static final String UPDATE =
+            "update exchange_rates set rate = ? where basecurrencyid = ? and targetcurrencyid = ?";
+
     public List<RawExchangeRateDto> selectAllExchangeRates() throws SQLException {
         List<RawExchangeRateDto> rawExchangeRateDtos = new ArrayList<>();
 
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FROM_EXCHANGE_RATES);
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT);
              ResultSet rs = preparedStatement.executeQuery()) {
 
             while (rs.next()) {
@@ -64,7 +67,7 @@ public class ExchangeRateDao extends BaseDao {
         int id = 0;
 
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_EXCHANGE_RATES,
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT,
                      Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, exchangeRate.getBaseCurrencyId());
             preparedStatement.setInt(2, exchangeRate.getTargetCurrencyId());
@@ -97,6 +100,20 @@ public class ExchangeRateDao extends BaseDao {
             } else {
                 return null;
             }
+        }
+    }
+
+    public boolean updateExchangeRate(BigDecimal rate, int baseCurrencyId, int targetCurrencyId) throws SQLException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
+            preparedStatement.setBigDecimal(1, rate);
+            preparedStatement.setInt(2, baseCurrencyId);
+            preparedStatement.setInt(3, targetCurrencyId);
+
+            preparedStatement.executeUpdate();
+
+            int affectedRows = preparedStatement.executeUpdate();
+            return affectedRows > 0;
         }
     }
 }

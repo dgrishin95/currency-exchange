@@ -10,6 +10,8 @@ import com.mysite.currencyexchange.service.CurrencyService;
 import com.mysite.currencyexchange.service.ExchangeRateService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
+import java.math.BigDecimal;
+import java.util.Optional;
 
 public class BaseExchangeRateServlet extends BaseServlet {
     protected ExchangeRateService exchangeRateService;
@@ -41,5 +43,17 @@ public class BaseExchangeRateServlet extends BaseServlet {
     protected boolean isValidCurrencies(CurrencyResponseDto baseCurrencyResponseDto,
                                       CurrencyResponseDto targetCurrencyResponseDto) {
         return baseCurrencyResponseDto != null && targetCurrencyResponseDto != null;
+    }
+
+    protected Optional<BigDecimal> parseBigDecimal(String rate) {
+        if (isNotBlank(rate)) {
+            try {
+                return Optional.of(new BigDecimal(rate));
+            } catch (NumberFormatException e) {
+                return Optional.empty();
+            }
+        }
+
+        return Optional.empty();
     }
 }
