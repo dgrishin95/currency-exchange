@@ -32,9 +32,9 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
             String targetCurrencyCode = request.getParameter("targetCurrencyCode");
             String rate = request.getParameter("rate");
 
-            Optional<BigDecimal> rateValue = parseBigDecimal(rate);
+            Optional<BigDecimal> rateValue = exchangeRateService.parseBigDecimal(rate);
 
-            if (!isValidParameters(baseCurrencyCode, targetCurrencyCode, rateValue)) {
+            if (!exchangeRateService.isValidParameters(baseCurrencyCode, targetCurrencyCode, rateValue)) {
                 sendErrorResponse(response, MISSING_FIELD_ERROR, HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
@@ -17,9 +18,9 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String codes = extractCurrencyCodeFromPath(request.getPathInfo());
+            String codes = exchangeRateService.extractCurrencyCodeFromPath(request.getPathInfo());
 
-            if (!isCodesValid(codes)) {
+            if (!exchangeRateService.isCodesValid(codes)) {
                 sendErrorResponse(response, CURRENCY_CODES_MISSING_ERROR, HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
@@ -47,16 +48,17 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
     @Override
     protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String codes = extractCurrencyCodeFromPath(request.getPathInfo());
+            String codes = exchangeRateService.extractCurrencyCodeFromPath(request.getPathInfo());
 
-            if (!isCodesValid(codes)) {
+            if (!exchangeRateService.isCodesValid(codes)) {
                 sendErrorResponse(response, CURRENCY_CODES_MISSING_ERROR, HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
 
-            Map<String, String> formData = parseFormData(request);
+            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            Map<String, String> formData = exchangeRateService.parseFormData(body);
             String rate = formData.get("rate");
-            Optional<BigDecimal> rateValue = parseBigDecimal(rate);
+            Optional<BigDecimal> rateValue = exchangeRateService.parseBigDecimal(rate);
 
             if (rateValue.isEmpty()) {
                 sendErrorResponse(response, MISSING_FIELD_ERROR, HttpServletResponse.SC_BAD_REQUEST);

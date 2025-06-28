@@ -11,16 +11,7 @@ import com.mysite.currencyexchange.service.CurrencyService;
 import com.mysite.currencyexchange.service.ExchangeRateService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class BaseExchangeRateServlet extends BaseServlet {
     protected ExchangeRateService exchangeRateService;
@@ -49,49 +40,6 @@ public class BaseExchangeRateServlet extends BaseServlet {
         super.init(config);
     }
 
-    protected boolean isValidCurrencies(CurrencyResponseDto baseCurrencyResponseDto,
-                                      CurrencyResponseDto targetCurrencyResponseDto) {
-        return baseCurrencyResponseDto != null && targetCurrencyResponseDto != null;
-    }
-
-    protected Optional<BigDecimal> parseBigDecimal(String rate) {
-        if (isNotBlank(rate)) {
-            try {
-                return Optional.of(new BigDecimal(rate));
-            } catch (NumberFormatException e) {
-                return Optional.empty();
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    protected boolean isCodesValid(String codes) {
-        return codes != null && codes.length() == CURRENCY_CODES_LENGTH;
-    }
-
-    protected boolean isValidParameters(String baseCurrencyCode, String targetCurrencyCode,
-                                      Optional<BigDecimal> rateValue) {
-        return isNotBlank(baseCurrencyCode) && isNotBlank(targetCurrencyCode) && rateValue.isPresent();
-    }
-
-    protected Map<String, String> parseFormData(HttpServletRequest request) throws IOException {
-        String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        Map<String, String> params = new HashMap<>();
-
-        String[] pairs = body.split("&");
-        for (String pair : pairs) {
-            String[] keyValue = pair.split("=");
-            if (keyValue.length == 2) {
-                String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
-                String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
-                params.put(key, value);
-            }
-        }
-
-        return params;
-    }
-
     protected CurrencyPairDto getCurrencyPairDto(HttpServletResponse response, String codes) throws Exception {
         String baseCurrencyCode = codes.substring(0, CURRENCY_CODE_LENGTH);
         String targetCurrencyCode = codes.substring(CURRENCY_CODE_LENGTH, CURRENCY_CODES_LENGTH);
@@ -99,7 +47,7 @@ public class BaseExchangeRateServlet extends BaseServlet {
         CurrencyResponseDto baseCurrencyResponseDto = exchangeRateService.selectCurrencyByCode(baseCurrencyCode);
         CurrencyResponseDto targetCurrencyResponseDto = exchangeRateService.selectCurrencyByCode(targetCurrencyCode);
 
-        if (!isValidCurrencies(baseCurrencyResponseDto, targetCurrencyResponseDto)) {
+        if (!exchangeRateService.isValidCurrencies(baseCurrencyResponseDto, targetCurrencyResponseDto)) {
             sendErrorResponse(response, RATE_NOT_FOUND_ERROR, HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
@@ -112,7 +60,7 @@ public class BaseExchangeRateServlet extends BaseServlet {
         CurrencyResponseDto baseCurrencyResponseDto = exchangeRateService.selectCurrencyByCode(baseCurrencyCode);
         CurrencyResponseDto targetCurrencyResponseDto = exchangeRateService.selectCurrencyByCode(targetCurrencyCode);
 
-        if (!isValidCurrencies(baseCurrencyResponseDto, targetCurrencyResponseDto)) {
+        if (!exchangeRateService.isValidCurrencies(baseCurrencyResponseDto, targetCurrencyResponseDto)) {
             sendErrorResponse(response, CURRENCY_PAIR_ERROR, HttpServletResponse.SC_NOT_FOUND);
             return null;
         }

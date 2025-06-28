@@ -25,18 +25,4 @@ public class BaseServlet extends HttpServlet {
         Map<String, String> error = Map.of("error", errorMessage);
         sendJsonResponse(response, error, statusCode);
     }
-
-    protected boolean isNotBlank(String str) {
-        return str != null && !str.trim().isEmpty();
-    }
-
-
-    protected String extractCurrencyCodeFromPath(String pathInfo) {
-        if (pathInfo == null || pathInfo.equals("/") || pathInfo.trim().isEmpty()) {
-            return null;
-        }
-
-        String code = pathInfo.substring(1);
-        return code.trim().isEmpty() ? null : code.toUpperCase();
-    }
 }

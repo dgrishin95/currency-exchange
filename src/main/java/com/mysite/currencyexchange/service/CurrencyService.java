@@ -50,7 +50,6 @@ public class CurrencyService extends BaseService {
         return isNotBlank(dto.getName()) &&
                 isNotBlank(dto.getCode()) &&
                 isNotBlank(dto.getSign());
-
     }
 
     public boolean isValidCode(String code) {
