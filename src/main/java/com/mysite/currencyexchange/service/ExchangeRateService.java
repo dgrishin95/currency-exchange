@@ -1,6 +1,7 @@
 package com.mysite.currencyexchange.service;
 
 import com.mysite.currencyexchange.dao.ExchangeRateDao;
+import com.mysite.currencyexchange.dto.CurrencyPairDto;
 import com.mysite.currencyexchange.dto.CurrencyResponseDto;
 import com.mysite.currencyexchange.dto.ExchangeRateRequestDto;
 import com.mysite.currencyexchange.dto.ExchangeRateResponseDto;
@@ -35,31 +36,26 @@ public class ExchangeRateService {
     }
 
     public ExchangeRateResponseDto saveExchangeRate(ExchangeRateRequestDto exchangeRateRequestDto,
-                                                    CurrencyResponseDto baseCurrencyResponseDto,
-                                                    CurrencyResponseDto targetCurrencyResponseDto) throws SQLException {
-        ExchangeRate entity = new ExchangeRate(0, baseCurrencyResponseDto.getId(),
-                targetCurrencyResponseDto.getId(), exchangeRateRequestDto.getRate());
+                                                    CurrencyPairDto currencyPairDto) throws SQLException {
+        ExchangeRate entity = new ExchangeRate(0, currencyPairDto.getBaseCurrency().getId(),
+                currencyPairDto.getTargetCurrency().getId(), exchangeRateRequestDto.getRate());
 
         int generatedId = exchangeRateDao.saveExchangeRate(entity);
 
-        return new ExchangeRateResponseDto(generatedId, baseCurrencyResponseDto,
-                targetCurrencyResponseDto, exchangeRateRequestDto.getRate());
+        return new ExchangeRateResponseDto(generatedId, currencyPairDto, exchangeRateRequestDto.getRate());
     }
 
-    public ExchangeRateResponseDto selectExchangeRateByCurrenciesCodes(CurrencyResponseDto baseCurrencyResponseDto,
-                                                                       CurrencyResponseDto targetCurrencyResponseDto) throws SQLException {
+    public ExchangeRateResponseDto selectExchangeRateByCurrenciesCodes(CurrencyPairDto currencyPairDto) throws SQLException {
         ExchangeRate exchangeRate = exchangeRateDao.selectExchangeRateByCodesIds(
-                baseCurrencyResponseDto.getId(), targetCurrencyResponseDto.getId());
+                currencyPairDto.getBaseCurrency().getId(), currencyPairDto.getTargetCurrency().getId());
 
         return exchangeRate != null ?
-                new ExchangeRateResponseDto(exchangeRate.getId(), baseCurrencyResponseDto,
-                        targetCurrencyResponseDto, exchangeRate.getRate())
+                new ExchangeRateResponseDto(exchangeRate.getId(), currencyPairDto, exchangeRate.getRate())
                 : null;
     }
 
-    public boolean updateExchangeRate(BigDecimal rate, CurrencyResponseDto baseCurrencyResponseDto,
-                                      CurrencyResponseDto targetCurrencyResponseDto) throws SQLException {
+    public boolean updateExchangeRate(BigDecimal rate, CurrencyPairDto currencyPairDto) throws SQLException {
         return exchangeRateDao.updateExchangeRate(
-                rate, baseCurrencyResponseDto.getId(), targetCurrencyResponseDto.getId());
+                rate, currencyPairDto.getBaseCurrency().getId(), currencyPairDto.getTargetCurrency().getId());
     }
 }

@@ -1,6 +1,6 @@
 package com.mysite.currencyexchange.rest;
 
-import com.mysite.currencyexchange.dto.CurrencyResponseDto;
+import com.mysite.currencyexchange.dto.CurrencyPairDto;
 import com.mysite.currencyexchange.dto.ExchangeRateRequestDto;
 import com.mysite.currencyexchange.dto.ExchangeRateResponseDto;
 import com.mysite.currencyexchange.rest.base.BaseExchangeRateServlet;
@@ -39,16 +39,14 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
                 return;
             }
 
-            CurrencyResponseDto baseCurrencyResponseDto = exchangeRateService.selectCurrencyByCode(baseCurrencyCode);
-            CurrencyResponseDto targetCurrencyResponseDto = exchangeRateService.selectCurrencyByCode(targetCurrencyCode);
+            CurrencyPairDto currencyPairDto = getCurrencyPairDto(response, baseCurrencyCode, targetCurrencyCode);
 
-            if (!isValidCurrencies(baseCurrencyResponseDto, targetCurrencyResponseDto)) {
-                sendErrorResponse(response, CURRENCY_PAIR_ERROR, HttpServletResponse.SC_NOT_FOUND);
+            if (currencyPairDto == null) {
                 return;
             }
 
-            ExchangeRateResponseDto exchangeRateResponseDto = exchangeRateService.selectExchangeRateByCurrenciesCodes(
-                    baseCurrencyResponseDto, targetCurrencyResponseDto);
+            ExchangeRateResponseDto exchangeRateResponseDto =
+                    exchangeRateService.selectExchangeRateByCurrenciesCodes(currencyPairDto);
 
             if (exchangeRateResponseDto != null) {
                 sendErrorResponse(response, CURRENCY_PAIR_EXISTS_ERROR, HttpServletResponse.SC_CONFLICT);
@@ -58,16 +56,10 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
             ExchangeRateRequestDto exchangeRateRequestDto = new ExchangeRateRequestDto(
                     baseCurrencyCode, targetCurrencyCode, rateValue.get());
 
-            exchangeRateResponseDto = exchangeRateService.saveExchangeRate(exchangeRateRequestDto,
-                    baseCurrencyResponseDto, targetCurrencyResponseDto);
+            exchangeRateResponseDto = exchangeRateService.saveExchangeRate(exchangeRateRequestDto, currencyPairDto);
             sendJsonResponse(response, exchangeRateResponseDto, HttpServletResponse.SC_CREATED);
         } catch (Exception e) {
             sendErrorResponse(response, DATABASE_ERROR, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private boolean isValidParameters(String baseCurrencyCode, String targetCurrencyCode,
-                                      Optional<BigDecimal> rateValue) {
-        return isNotBlank(baseCurrencyCode) && isNotBlank(targetCurrencyCode) && rateValue.isPresent();
     }
 }
