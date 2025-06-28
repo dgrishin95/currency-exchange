@@ -31,7 +31,7 @@ public class CurrencyCollectionServlet extends BaseCurrencyServlet {
 
             CurrencyRequestDto currencyRequestDto = new CurrencyRequestDto(code, name, sign);
 
-            if (!isValidCurrencyRequest(currencyRequestDto)) {
+            if (!currencyService.isValidCurrencyRequest(currencyRequestDto)) {
                 sendErrorResponse(response, MISSING_FIELD_ERROR, HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
@@ -46,11 +46,5 @@ public class CurrencyCollectionServlet extends BaseCurrencyServlet {
         } catch (Exception e) {
             sendErrorResponse(response, DATABASE_ERROR, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private boolean isValidCurrencyRequest(CurrencyRequestDto dto) {
-        return isNotBlank(dto.getName()) &&
-                isNotBlank(dto.getCode()) &&
-                isNotBlank(dto.getSign());
     }
 }
