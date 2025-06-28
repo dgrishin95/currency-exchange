@@ -13,16 +13,16 @@ public class CurrencyItemServlet extends BaseCurrencyServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            String code = extractCurrencyCodeFromPath(req.getPathInfo());
+            String code = currencyService.extractCurrencyCodeFromPath(req.getPathInfo());
 
-            if (code == null) {
+            if (!currencyService.isValidCode(code)) {
                 sendErrorResponse(resp, CURRENCY_CODE_REQUIRED_ERROR, HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
 
             CurrencyResponseDto currencyResponseDto = currencyService.selectCurrencyByCode(code);
 
-            if (currencyResponseDto == null) {
+            if (!currencyService.isValidCurrencyResponseDto(currencyResponseDto)) {
                 sendErrorResponse(resp, CURRENCY_NOT_FOUND_ERROR, HttpServletResponse.SC_NOT_FOUND);
                 return;
             }

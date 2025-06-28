@@ -52,4 +52,12 @@ public class CurrencyService extends BaseService {
                 isNotBlank(dto.getSign());
 
     }
+
+    public boolean isValidCode(String code) {
+        return code != null;
+    }
+
+    public boolean isValidCurrencyResponseDto(CurrencyResponseDto currencyResponseDto) {
+        return currencyResponseDto != null;
+    }
 }

@@ -7,11 +7,12 @@ import com.mysite.currencyexchange.dto.ExchangeRateRequestDto;
 import com.mysite.currencyexchange.dto.ExchangeRateResponseDto;
 import com.mysite.currencyexchange.mapper.ExchangeRateMapper;
 import com.mysite.currencyexchange.model.ExchangeRate;
+import com.mysite.currencyexchange.service.base.BaseService;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ExchangeRateService {
+public class ExchangeRateService extends BaseService {
 
     private final ExchangeRateDao exchangeRateDao;
     private final ExchangeRateMapper exchangeRateMapper;
