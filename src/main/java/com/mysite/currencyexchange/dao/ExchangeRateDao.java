@@ -32,6 +32,13 @@ public class ExchangeRateDao extends BaseDao {
     private static final String UPDATE =
             "update exchange_rates set rate = ? where basecurrencyid = ? and targetcurrencyid = ?";
 
+    private static final String SELECT_RATE_BY_BASE_CODE_AND_TARGET_ID =
+            "select er.rate\n" +
+                    "from exchange_rates er\n" +
+                    "join currencies bc on er.basecurrencyid = bc.id\n" +
+                    "join currencies tc on er.targetcurrencyid = tc.id\n" +
+                    "where bc.code = 'USD' and tc.id = ?";
+
     public List<RawExchangeRateDto> selectAllExchangeRates() throws SQLException {
         List<RawExchangeRateDto> rawExchangeRateDtos = new ArrayList<>();
 
@@ -103,14 +110,26 @@ public class ExchangeRateDao extends BaseDao {
         }
     }
 
+    public BigDecimal selectRateByUsdAndTargetId(int targetCurrencyId) throws SQLException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_RATE_BY_BASE_CODE_AND_TARGET_ID)) {
+            preparedStatement.setInt(1, targetCurrencyId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBigDecimal("rate");
+            } else {
+                return null;
+            }
+        }
+    }
+
     public boolean updateExchangeRate(BigDecimal rate, int baseCurrencyId, int targetCurrencyId) throws SQLException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             preparedStatement.setBigDecimal(1, rate);
             preparedStatement.setInt(2, baseCurrencyId);
             preparedStatement.setInt(3, targetCurrencyId);
-
-            preparedStatement.executeUpdate();
 
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows > 0;

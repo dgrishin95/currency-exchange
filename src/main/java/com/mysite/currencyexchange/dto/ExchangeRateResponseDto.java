@@ -13,6 +13,11 @@ public class ExchangeRateResponseDto {
         this.rate = rate;
     }
 
+    public ExchangeRateResponseDto(CurrencyPairDto currencyPairDto, BigDecimal rate) {
+        this.currencyPairDto = currencyPairDto;
+        this.rate = rate;
+    }
+
     public ExchangeRateResponseDto() {
     }
 

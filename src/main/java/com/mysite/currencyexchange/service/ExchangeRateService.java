@@ -9,6 +9,7 @@ import com.mysite.currencyexchange.mapper.ExchangeRateMapper;
 import com.mysite.currencyexchange.model.ExchangeRate;
 import com.mysite.currencyexchange.service.base.BaseService;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -108,5 +109,29 @@ public class ExchangeRateService extends BaseService {
         }
 
         return params;
+    }
+
+    public ExchangeRateResponseDto getExchangeRate(CurrencyPairDto currencyPairDto) throws SQLException {
+        ExchangeRate exchangeRate = exchangeRateDao.selectExchangeRateByCodesIds(
+                currencyPairDto.getBaseCurrency().getId(), currencyPairDto.getTargetCurrency().getId());
+        ExchangeRateResponseDto exchangeRateResponseDto;
+
+        if (exchangeRate == null) {
+            exchangeRate = exchangeRateDao.selectExchangeRateByCodesIds(
+                    currencyPairDto.getTargetCurrency().getId(), currencyPairDto.getBaseCurrency().getId());
+            if (exchangeRate == null) {
+                BigDecimal rateB = exchangeRateDao.selectRateByUsdAndTargetId(currencyPairDto.getTargetCurrency().getId());
+                BigDecimal rateA = exchangeRateDao.selectRateByUsdAndTargetId(currencyPairDto.getBaseCurrency().getId());
+                exchangeRateResponseDto = new ExchangeRateResponseDto(currencyPairDto,
+                        rateB.divide(rateA, 2, RoundingMode.HALF_UP));
+            } else {
+                exchangeRateResponseDto = new ExchangeRateResponseDto(currencyPairDto,
+                        new BigDecimal(1).divide(exchangeRate.getRate(), 2, RoundingMode.HALF_UP));
+            }
+        } else {
+            exchangeRateResponseDto = new ExchangeRateResponseDto(currencyPairDto, exchangeRate.getRate());
+        }
+
+        return exchangeRateResponseDto;
     }
 }
