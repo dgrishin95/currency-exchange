@@ -8,11 +8,11 @@ public class ExchangeDto {
     private BigDecimal amount;
     private BigDecimal convertedAmount;
 
-    public ExchangeDto(CurrencyPairDto currencyPairDto, BigDecimal rate, BigDecimal amount, BigDecimal convertedAmount) {
+    public ExchangeDto(CurrencyPairDto currencyPairDto, BigDecimal rate, BigDecimal amount) {
         this.currencyPairDto = currencyPairDto;
         this.rate = rate;
         this.amount = amount;
-        this.convertedAmount = convertedAmount;
+        this.convertedAmount = rate.multiply(amount);
     }
 
     public ExchangeDto() {

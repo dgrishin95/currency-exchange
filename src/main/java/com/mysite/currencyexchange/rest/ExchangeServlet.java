@@ -35,7 +35,7 @@ public class ExchangeServlet extends BaseExchangeRateServlet {
                     exchangeRateService.getExchangeRate(currencyPairDto);
 
             ExchangeDto exchangeDto = new ExchangeDto(currencyPairDto, exchangeRateResponseDto.getRate(),
-                    amountValue.get(), exchangeRateResponseDto.getRate().multiply(amountValue.get()));
+                    amountValue.get());
 
             sendJsonResponse(response, exchangeDto, HttpServletResponse.SC_OK);
         } catch (Exception e) {
