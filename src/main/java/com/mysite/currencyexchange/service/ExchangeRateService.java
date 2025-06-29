@@ -134,4 +134,29 @@ public class ExchangeRateService extends BaseService {
 
         return exchangeRateResponseDto;
     }
+
+    public CurrencyPairDto getCurrencyPairDto(String codes) throws Exception {
+        String baseCurrencyCode = codes.substring(0, CURRENCY_CODE_LENGTH);
+        String targetCurrencyCode = codes.substring(CURRENCY_CODE_LENGTH, CURRENCY_CODES_LENGTH);
+
+        CurrencyResponseDto baseCurrencyResponseDto = selectCurrencyByCode(baseCurrencyCode);
+        CurrencyResponseDto targetCurrencyResponseDto = selectCurrencyByCode(targetCurrencyCode);
+
+        if (!isValidCurrencies(baseCurrencyResponseDto, targetCurrencyResponseDto)) {
+            return null;
+        }
+
+        return new CurrencyPairDto(baseCurrencyResponseDto, targetCurrencyResponseDto);
+    }
+
+    public CurrencyPairDto getCurrencyPairDto(String baseCurrencyCode, String targetCurrencyCode) throws Exception {
+        CurrencyResponseDto baseCurrencyResponseDto = selectCurrencyByCode(baseCurrencyCode);
+        CurrencyResponseDto targetCurrencyResponseDto = selectCurrencyByCode(targetCurrencyCode);
+
+        if (!isValidCurrencies(baseCurrencyResponseDto, targetCurrencyResponseDto)) {
+            return null;
+        }
+
+        return new CurrencyPairDto(baseCurrencyResponseDto, targetCurrencyResponseDto);
+    }
 }

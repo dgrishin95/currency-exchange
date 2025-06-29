@@ -25,10 +25,10 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
                 return;
             }
 
-            CurrencyPairDto currencyPairDto = getCurrencyPairDto(response, codes);
+            CurrencyPairDto currencyPairDto = exchangeRateService.getCurrencyPairDto(codes);
 
             if (currencyPairDto == null) {
-                return;
+                sendErrorResponse(response, RATE_NOT_FOUND_ERROR, HttpServletResponse.SC_NOT_FOUND);
             }
 
             ExchangeRateResponseDto exchangeRateResponseDto =
@@ -65,9 +65,10 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
                 return;
             }
 
-            CurrencyPairDto currencyPairDto = getCurrencyPairDto(response, codes);
+            CurrencyPairDto currencyPairDto = exchangeRateService.getCurrencyPairDto(codes);
 
             if (currencyPairDto == null) {
+                sendErrorResponse(response, RATE_NOT_FOUND_ERROR, HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
 

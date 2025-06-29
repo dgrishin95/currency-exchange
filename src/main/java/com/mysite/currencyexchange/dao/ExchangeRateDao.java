@@ -32,7 +32,7 @@ public class ExchangeRateDao extends BaseDao {
     private static final String UPDATE =
             "update exchange_rates set rate = ? where basecurrencyid = ? and targetcurrencyid = ?";
 
-    private static final String SELECT_RATE_BY_BASE_CODE_AND_TARGET_ID =
+    private static final String SELECT_BY_USD_CODE_AND_TARGET_ID =
             "select er.rate\n" +
                     "from exchange_rates er\n" +
                     "join currencies bc on er.basecurrencyid = bc.id\n" +
@@ -112,7 +112,7 @@ public class ExchangeRateDao extends BaseDao {
 
     public BigDecimal selectRateByUsdAndTargetId(int targetCurrencyId) throws SQLException {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_RATE_BY_BASE_CODE_AND_TARGET_ID)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_USD_CODE_AND_TARGET_ID)) {
             preparedStatement.setInt(1, targetCurrencyId);
             ResultSet rs = preparedStatement.executeQuery();
 

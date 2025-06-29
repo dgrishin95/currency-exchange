@@ -39,9 +39,11 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
                 return;
             }
 
-            CurrencyPairDto currencyPairDto = getCurrencyPairDto(response, baseCurrencyCode, targetCurrencyCode);
+            CurrencyPairDto currencyPairDto =
+                    exchangeRateService.getCurrencyPairDto(baseCurrencyCode, targetCurrencyCode);
 
             if (currencyPairDto == null) {
+                sendErrorResponse(response, CURRENCY_PAIR_ERROR, HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
 
