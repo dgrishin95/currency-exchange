@@ -139,14 +139,7 @@ public class ExchangeRateService extends BaseService {
         String baseCurrencyCode = codes.substring(0, CURRENCY_CODE_LENGTH);
         String targetCurrencyCode = codes.substring(CURRENCY_CODE_LENGTH, CURRENCY_CODES_LENGTH);
 
-        CurrencyResponseDto baseCurrencyResponseDto = selectCurrencyByCode(baseCurrencyCode);
-        CurrencyResponseDto targetCurrencyResponseDto = selectCurrencyByCode(targetCurrencyCode);
-
-        if (!isValidCurrencies(baseCurrencyResponseDto, targetCurrencyResponseDto)) {
-            return null;
-        }
-
-        return new CurrencyPairDto(baseCurrencyResponseDto, targetCurrencyResponseDto);
+        return getCurrencyPairDto(baseCurrencyCode, targetCurrencyCode);
     }
 
     public CurrencyPairDto getCurrencyPairDto(String baseCurrencyCode, String targetCurrencyCode) throws Exception {
@@ -158,5 +151,13 @@ public class ExchangeRateService extends BaseService {
         }
 
         return new CurrencyPairDto(baseCurrencyResponseDto, targetCurrencyResponseDto);
+    }
+
+    public boolean isCurrencyPairExists(CurrencyPairDto currencyPairDto) {
+        return currencyPairDto != null;
+    }
+
+    public boolean isExchangeRateExists(ExchangeRateResponseDto exchangeRateResponseDto) {
+        return exchangeRateResponseDto != null;
     }
 }

@@ -42,7 +42,7 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
             CurrencyPairDto currencyPairDto =
                     exchangeRateService.getCurrencyPairDto(baseCurrencyCode, targetCurrencyCode);
 
-            if (currencyPairDto == null) {
+            if (!exchangeRateService.isCurrencyPairExists(currencyPairDto)) {
                 sendErrorResponse(response, CURRENCY_PAIR_ERROR, HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
@@ -50,7 +50,7 @@ public class ExchangeRateCollectionServlet extends BaseExchangeRateServlet {
             ExchangeRateResponseDto exchangeRateResponseDto =
                     exchangeRateService.selectExchangeRateByCurrenciesCodes(currencyPairDto);
 
-            if (exchangeRateResponseDto != null) {
+            if (exchangeRateService.isExchangeRateExists(exchangeRateResponseDto)) {
                 sendErrorResponse(response, CURRENCY_PAIR_EXISTS_ERROR, HttpServletResponse.SC_CONFLICT);
                 return;
             }
