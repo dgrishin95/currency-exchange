@@ -32,7 +32,7 @@ public class ExchangeServlet extends BaseExchangeRateServlet {
             CurrencyPairDto currencyPairDto =
                     exchangeRateService.getCurrencyPairDto(baseCurrencyCode, targetCurrencyCode);
 
-            if (currencyPairDto == null) {
+            if (!exchangeRateService.isCurrencyPairExists(currencyPairDto)) {
                 sendErrorResponse(response, CURRENCY_PAIR_ERROR, HttpServletResponse.SC_NOT_FOUND);
                 return;
             }

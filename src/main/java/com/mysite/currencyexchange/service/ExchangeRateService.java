@@ -10,12 +10,8 @@ import com.mysite.currencyexchange.model.ExchangeRate;
 import com.mysite.currencyexchange.service.base.BaseService;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class ExchangeRateService extends BaseService {
@@ -93,22 +89,6 @@ public class ExchangeRateService extends BaseService {
 
     public boolean isCodesValid(String codes) {
         return codes != null && codes.length() == CURRENCY_CODES_LENGTH;
-    }
-
-    public Map<String, String> parseFormData(String body) {
-        Map<String, String> params = new HashMap<>();
-
-        String[] pairs = body.split("&");
-        for (String pair : pairs) {
-            String[] keyValue = pair.split("=");
-            if (keyValue.length == 2) {
-                String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
-                String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
-                params.put(key, value);
-            }
-        }
-
-        return params;
     }
 
     public ExchangeRateResponseDto getExchangeRate(CurrencyPairDto currencyPairDto) throws SQLException {

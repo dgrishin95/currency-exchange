@@ -8,6 +8,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,14 +30,14 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
 
             CurrencyPairDto currencyPairDto = exchangeRateService.getCurrencyPairDto(codes);
 
-            if (currencyPairDto == null) {
+            if (!exchangeRateService.isCurrencyPairExists(currencyPairDto)) {
                 sendErrorResponse(response, RATE_NOT_FOUND_ERROR, HttpServletResponse.SC_NOT_FOUND);
             }
 
             ExchangeRateResponseDto exchangeRateResponseDto =
                     exchangeRateService.selectExchangeRateByCurrenciesCodes(currencyPairDto);
 
-            if (exchangeRateResponseDto == null) {
+            if (!exchangeRateService.isExchangeRateExists(exchangeRateResponseDto)) {
                 sendErrorResponse(response, RATE_NOT_FOUND_ERROR, HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
@@ -56,8 +59,8 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
             }
 
             String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            Map<String, String> formData = exchangeRateService.parseFormData(body);
-            String rate = formData.get("rate");
+            String rate = getRateParameter(body);
+
             Optional<BigDecimal> rateValue = exchangeRateService.parseBigDecimal(rate);
 
             if (rateValue.isEmpty()) {
@@ -67,7 +70,7 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
 
             CurrencyPairDto currencyPairDto = exchangeRateService.getCurrencyPairDto(codes);
 
-            if (currencyPairDto == null) {
+            if (!exchangeRateService.isCurrencyPairExists(currencyPairDto)) {
                 sendErrorResponse(response, RATE_NOT_FOUND_ERROR, HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
@@ -82,7 +85,7 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
             ExchangeRateResponseDto exchangeRateResponseDto =
                     exchangeRateService.selectExchangeRateByCurrenciesCodes(currencyPairDto);
 
-            if (exchangeRateResponseDto == null) {
+            if (!exchangeRateService.isExchangeRateExists(exchangeRateResponseDto)) {
                 sendErrorResponse(response, RATE_NOT_FOUND_ERROR, HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
@@ -92,5 +95,21 @@ public class ExchangeRateItemServlet extends BaseExchangeRateServlet {
         } catch (Exception e) {
             sendErrorResponse(response, DATABASE_ERROR, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private String getRateParameter(String body) {
+        Map<String, String> params = new HashMap<>();
+
+        String[] pairs = body.split("&");
+        for (String pair : pairs) {
+            String[] keyValue = pair.split("=");
+            if (keyValue.length == 2) {
+                String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
+                String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
+                params.put(key, value);
+            }
+        }
+
+        return params.get("rate");
     }
 }
