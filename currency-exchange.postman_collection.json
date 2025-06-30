@@ -1,0 +1,626 @@
+{
+	"info": {
+		"_postman_id": "5634a7d3-c521-430c-ac68-ec89e0630b78",
+		"name": "2. currency-exchange",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42524695",
+		"_collection_link": "https://fd5555-8379.postman.co/workspace/test~22cde233-b719-4645-8bc0-31cab06a5463/collection/42524695-5634a7d3-c521-430c-ac68-ec89e0630b78?action=share&source=collection_link&creator=42524695"
+	},
+	"item": [
+		{
+			"name": "GET /currencies",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/currencies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"currencies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /currency/EUR",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/currency/EUR",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"currency",
+						"EUR"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /currency/404",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/currency/EUR1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"currency",
+						"EUR1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /currency/400",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/currency/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"currency",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /currencies ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Rubble",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "RUB",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "₽",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/currencies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"currencies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /currencies/409",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Rubble",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "RUB",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "₽",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/currencies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"currencies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /currencies/400",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "RUB",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "₽",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/currencies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"currencies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /exchangeRates",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/exchangeRates",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /exchangeRates",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "baseCurrencyCode",
+							"value": "JPY",
+							"type": "text"
+						},
+						{
+							"key": "targetCurrencyCode",
+							"value": "EUR",
+							"type": "text"
+						},
+						{
+							"key": "rate",
+							"value": "0.88",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/exchangeRates",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /exchangeRates/400",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "targetCurrencyCode",
+							"value": "EUR",
+							"type": "text"
+						},
+						{
+							"key": "rate",
+							"value": "0.88",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/exchangeRates",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /exchangeRates/409",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "baseCurrencyCode",
+							"value": "JPY",
+							"type": "text"
+						},
+						{
+							"key": "targetCurrencyCode",
+							"value": "EUR",
+							"type": "text"
+						},
+						{
+							"key": "rate",
+							"value": "0.88",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/exchangeRates",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /exchangeRates/404",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "baseCurrencyCode",
+							"value": "JPY1",
+							"type": "text"
+						},
+						{
+							"key": "targetCurrencyCode",
+							"value": "EUR",
+							"type": "text"
+						},
+						{
+							"key": "rate",
+							"value": "0.88",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/exchangeRates",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /exchangeRate/USDEUR",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/exchangeRate/USDEUR",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRate",
+						"USDEUR"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /exchangeRate/400",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/exchangeRate/USDEU",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRate",
+						"USDEU"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /exchangeRate/404",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/exchangeRate/EURJPY",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRate",
+						"EURJPY"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH /exchangeRate/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "rate",
+							"value": "0.894",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/exchangeRate/JPYEUR",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRate",
+						"JPYEUR"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH /exchangeRate/400",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:8888/exchangeRate/JPYEUR",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRate",
+						"JPYEUR"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH /exchangeRate/404",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "rate",
+							"value": "0.89",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/exchangeRate/JPYEUS",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchangeRate",
+						"JPYEUS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /exchange",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/exchange?from=USD&to=EUR&amount=2.0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchange"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "USD"
+						},
+						{
+							"key": "to",
+							"value": "EUR"
+						},
+						{
+							"key": "amount",
+							"value": "2.0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /exchange/USD-A_USD-B",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/exchange?from=BRL&to=GEL&amount=4.761",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"exchange"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "BRL"
+						},
+						{
+							"key": "to",
+							"value": "GEL"
+						},
+						{
+							"key": "amount",
+							"value": "4.761"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
