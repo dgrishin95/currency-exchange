@@ -94,25 +94,32 @@ public class ExchangeRateService extends BaseService {
     public ExchangeRateResponseDto getExchangeRate(CurrencyPairDto currencyPairDto) throws SQLException {
         ExchangeRate exchangeRate = exchangeRateDao.selectExchangeRateByCodesIds(
                 currencyPairDto.getBaseCurrency().getId(), currencyPairDto.getTargetCurrency().getId());
-        ExchangeRateResponseDto exchangeRateResponseDto;
 
         if (exchangeRate == null) {
-            exchangeRate = exchangeRateDao.selectExchangeRateByCodesIds(
-                    currencyPairDto.getTargetCurrency().getId(), currencyPairDto.getBaseCurrency().getId());
-            if (exchangeRate == null) {
-                BigDecimal rateB = exchangeRateDao.selectRateByUsdAndTargetId(currencyPairDto.getTargetCurrency().getId());
-                BigDecimal rateA = exchangeRateDao.selectRateByUsdAndTargetId(currencyPairDto.getBaseCurrency().getId());
-                exchangeRateResponseDto = new ExchangeRateResponseDto(currencyPairDto,
-                        rateB.divide(rateA, 2, RoundingMode.HALF_UP));
-            } else {
-                exchangeRateResponseDto = new ExchangeRateResponseDto(currencyPairDto,
-                        new BigDecimal(1).divide(exchangeRate.getRate(), 2, RoundingMode.HALF_UP));
-            }
-        } else {
-            exchangeRateResponseDto = new ExchangeRateResponseDto(currencyPairDto, exchangeRate.getRate());
+            return getReverseExchangeRate(currencyPairDto);
         }
 
-        return exchangeRateResponseDto;
+        return new ExchangeRateResponseDto(currencyPairDto, exchangeRate.getRate());
+    }
+
+    private ExchangeRateResponseDto getReverseExchangeRate(CurrencyPairDto currencyPairDto) throws SQLException {
+        ExchangeRate exchangeRate = exchangeRateDao.selectExchangeRateByCodesIds(
+                currencyPairDto.getTargetCurrency().getId(), currencyPairDto.getBaseCurrency().getId());
+
+        if (exchangeRate == null) {
+            return getExchangeRateByUsd(currencyPairDto);
+        }
+
+        return new ExchangeRateResponseDto(currencyPairDto,
+                new BigDecimal(1).divide(exchangeRate.getRate(), 2, RoundingMode.HALF_UP));
+    }
+
+    private ExchangeRateResponseDto getExchangeRateByUsd(CurrencyPairDto currencyPairDto) throws SQLException {
+        BigDecimal baseCurrencyRate = exchangeRateDao.selectRateByUsdAndTargetId(currencyPairDto.getBaseCurrency().getId());
+        BigDecimal targetCurrencyRate = exchangeRateDao.selectRateByUsdAndTargetId(currencyPairDto.getTargetCurrency().getId());
+
+        return new ExchangeRateResponseDto(currencyPairDto,
+                targetCurrencyRate.divide(baseCurrencyRate, 2, RoundingMode.HALF_UP));
     }
 
     public CurrencyPairDto getCurrencyPairDto(String codes) throws Exception {
